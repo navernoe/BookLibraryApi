@@ -1,0 +1,17 @@
+version: "3.3"
+services:
+  db:
+    image: navernoe/booklibrary:pg
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: 123123123
+      PGDATA: data
+  api:
+    image: navernoe/booklibrary
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    environment:
+      ASPNETCORE_URLS: http://+:5000
