@@ -13,5 +13,7 @@ services:
       - "5000:5000"
     depends_on:
       - db
+    command: ["dotnet", "BookLibraryApi.dll"]
     environment:
       ASPNETCORE_URLS: http://+:5000
+    working_dir: /src/BookLibraryApi/bin/Release/netcoreapp3.1
