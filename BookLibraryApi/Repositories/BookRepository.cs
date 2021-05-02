@@ -14,24 +14,31 @@ namespace BookLibraryApi.Repositories
             this.db = db;
         }
 
-        public async Task<Book> Add(Book book)
+        public Book Add(Book book)
         {
             db.Books.Add(book);
-            await db.SaveChangesAsync();
+            db.SaveChanges();
 
             return book;
         }
 
-        public async Task<string> Remove(int id)
+        public string Remove(long id)
         {
             Book bookById = db.Books.Where(b => b.Id == id).First<Book>();
             db.Books.Remove(bookById);
-            await db.SaveChangesAsync();
+            db.SaveChanges();
 
             return bookById.Name;
         }
 
-        public Book GetById(int id)
+        public void UpdateName(Book book, string name)
+        {
+            book.Name = name;
+            db.Books.Update(book);
+            db.SaveChanges();
+        }
+
+        public Book GetById(long id)
         {
             Book bookById = db.Books.Where(b => b.Id == id).First<Book>();
 

@@ -23,7 +23,7 @@ namespace BookLibraryApi.Controllers
 
         [HttpPost]
         [Route("add")]
-        public async Task<ObjectResult> Add(
+        public ObjectResult Add(
             [FromQuery] long authorId,
             [FromQuery] long bookId
         )
@@ -36,7 +36,7 @@ namespace BookLibraryApi.Controllers
                     BookId = bookId
                 };
 
-                await linkRepository.Add(link);
+                linkRepository.Add(link);
             }
             catch(DbUpdateException e)
             {
@@ -52,7 +52,7 @@ namespace BookLibraryApi.Controllers
 
         [HttpDelete]
         [Route("remove")]
-        public async Task<ObjectResult> Remove(
+        public ObjectResult Remove(
             [FromQuery] long authorId,
             [FromQuery] long bookId
         )
@@ -61,7 +61,7 @@ namespace BookLibraryApi.Controllers
             {
                 AuthorBookLink link = linkRepository.Get(bookId, authorId);
 
-                await linkRepository.Remove(link);
+                linkRepository.Remove(link);
             }
             catch (InvalidOperationException e)
             {

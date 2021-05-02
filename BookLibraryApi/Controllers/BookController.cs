@@ -14,11 +14,13 @@ namespace BookLibraryApi.Controllers
     {
         private readonly ILogger<BookController> _logger;
         private BookRepository bookRepository;
+        private AuthorBookLinkRepository linkRepository;
 
         public BookController(ILogger<BookController> logger, BookLibraryContext db)
         {
             _logger = logger;
             bookRepository = new BookRepository(db);
+            linkRepository = new AuthorBookLinkRepository(db);
         }
 
         [HttpGet]
@@ -29,20 +31,20 @@ namespace BookLibraryApi.Controllers
         }
 
         [HttpGet]
-        public Book Get([FromQuery] int id)
+        public Book Get([FromQuery] long id)
         {
             return bookRepository.GetById(id);
         }
 
         [HttpPost]
-        public async Task<ObjectResult> Add(string bookName)
+        public ObjectResult Add(string bookName)
         {
             if (String.IsNullOrEmpty(bookName))
             {
                 return BadRequest("Wrong book's name");
             }
 
-            Book newBook = await bookRepository.Add
+            Book newBook = bookRepository.Add
                 (
                      new Book { Name = bookName }
                 );
@@ -50,13 +52,32 @@ namespace BookLibraryApi.Controllers
             return Created(bookName, newBook);
         }
 
-        [HttpDelete]
-        [Route("remove/{id}")]
-        public async Task<ObjectResult> Remove(int id)
+        [HttpPost]
+        [Route("update")]
+        public ObjectResult Update(long bookId, string name)
         {
             try
             {
-                string removedBookName = await bookRepository.Remove(id);
+                Book book = bookRepository.GetById(bookId);
+                string oldName = book.Name;
+                bookRepository.UpdateName(book, name);
+
+                return Ok($"Author's name {oldName} was update to {book.Name}");
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpDelete]
+        [Route("remove/{id}")]
+        public ObjectResult Remove(long id)
+        {
+            try
+            {
+                linkRepository.RemoveBookLinks(id);
+                string removedBookName = bookRepository.Remove(id);
 
                 return Ok($"Book {removedBookName} with id = {id} was removed");
             }

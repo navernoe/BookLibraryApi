@@ -3,20 +3,22 @@ RestAPI to work with books and authors
 
 #### Books:
  
-|       Operation         |  Method  |                URL                     |                PARAMS                |
-|:------------------------|:--------:|:---------------------------------------|:-------------------------------------|
-|   Add book              |  POST    | `/books`                               | `{ "bookName": string }`             |
-|   Remove book           |  DELETE  | `/books/remove/{id}`                   | -                                    |
-|   Get book by id        |  GET     | `/books`                               | `{ "id": number }`                   |
-|   Get all books         |  GET     | `/books/all`                           | -                                    |
+|       Operation         |  Method  |                URL                     |                PARAMS                 |
+|:------------------------|:--------:|:---------------------------------------|:--------------------------------------|
+|   Add book              |  POST    | `/books`                               | `{ "bookName": string }`              |
+|   Remove book           |  DELETE  | `/books/remove/{id}`                   | -                                     |
+|   Update book           |  POST    | `/books/update`                        | `{ "bookId": number, "name": string}` |
+|   Get book by id        |  GET     | `/books`                               | `{ "id": number }`                    |
+|   Get all books         |  GET     | `/books/all`                           | -                                     |
 
 #### Authors:
-|       Operation         |  Method  |                URL                     |                PARAMS                |
-|:------------------------|:--------:|:---------------------------------------|:-------------------------------------|
-|   Add author            |  POST    | `/authors`                             | `{ "authorName": string }`           |
-|   Remove author         |  DELETE  | `/authors/remove/{id}`                 | -                                    |
-|   Get author by id      |  GET     | `/authors`                             | `{ "id": number }`                   |
-|   Get all authors       |  GET     | `/authors/all`                         | -                                    |
+|       Operation         |  Method  |                URL                     |                 PARAMS                  |
+|:------------------------|:--------:|:---------------------------------------|:----------------------------------------|
+|   Add author            |  POST    | `/authors`                             | `{ "authorName": string }`              |
+|   Update author         |  POST  | `/authors/update`                        | `{ "authorId": number, "name": string}` |
+|   Remove author         |  DELETE  | `/authors/remove/{id}`                 | -                                       |
+|   Get author by id      |  GET     | `/authors`                             | `{ "id": number }`                      |
+|   Get all authors       |  GET     | `/authors/all`                         | -                                       |
 
 #### Authors' and books' links
 |              Operation             |  Method  |            URL            |                  PARAMS                   |

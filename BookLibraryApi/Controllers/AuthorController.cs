@@ -14,11 +14,13 @@ namespace BookLibraryApi.Controllers
     {
         private readonly ILogger<AuthorController> _logger;
         private AuthorRepository authorRepository;
+        private AuthorBookLinkRepository linkRepository;
 
         public AuthorController(ILogger<AuthorController> logger, BookLibraryContext db)
         {
             _logger = logger;
             authorRepository = new AuthorRepository(db);
+            linkRepository = new AuthorBookLinkRepository(db);
         }
 
         [HttpGet]
@@ -35,14 +37,14 @@ namespace BookLibraryApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ObjectResult> Add(string authorName)
+        public ObjectResult Add(string authorName)
         {
             if (String.IsNullOrEmpty(authorName))
             {
                 return BadRequest("Wrong author's name");
             }
 
-            Author newAuthor = await authorRepository.Add
+            Author newAuthor = authorRepository.Add
                 (
                      new Author { Name = authorName }
                 );
@@ -50,13 +52,32 @@ namespace BookLibraryApi.Controllers
             return Created(authorName, newAuthor);
         }
 
-        [HttpDelete]
-        [Route("remove/{id}")]
-        public async Task<ObjectResult> Remove(int id)
+        [HttpPost]
+        [Route("update")]
+        public ObjectResult Update(long authorId, string name)
         {
             try
             {
-                string removedAuthorName = await authorRepository.Remove(id);
+                Author author = authorRepository.GetById(authorId);
+                string oldName = author.Name;
+                authorRepository.UpdateName(author, name);
+
+                return Ok($"Author's name {oldName} was update to {author.Name}");
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpDelete]
+        [Route("remove/{id}")]
+        public ObjectResult Remove(long id)
+        {
+            try
+            {
+                linkRepository.RemoveAuthorLinks(id);
+                string removedAuthorName = authorRepository.Remove(id);
 
                 return Ok($"Author {removedAuthorName} with id = {id} was removed");
             }

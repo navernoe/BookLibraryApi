@@ -15,19 +15,31 @@ namespace BookLibraryApi.Repositories
             this.db = db;
         }
 
-        public async Task<AuthorBookLink> Add(AuthorBookLink link)
+        public AuthorBookLink Add(AuthorBookLink link)
         {
 
             db.AuthorBookLinks.Add(link);
-            await db.SaveChangesAsync();
+            db.SaveChanges();
 
             return link;
         }
 
-        public async Task Remove(AuthorBookLink link)
+        public void Remove(AuthorBookLink link)
         {
             db.AuthorBookLinks.Remove(link);
-            await db.SaveChangesAsync();
+            db.SaveChanges();
+        }
+
+        public void RemoveBookLinks(long bookId)
+        {
+            db.AuthorBookLinks.RemoveRange(db.AuthorBookLinks.Where(l => l.BookId == bookId));
+            db.SaveChanges();
+        }
+
+        public void RemoveAuthorLinks(long authorId)
+        {
+            db.AuthorBookLinks.RemoveRange(db.AuthorBookLinks.Where(l => l.AuthorId == authorId));
+            db.SaveChanges();
         }
 
         public AuthorBookLink Get(long bookId, long authorId)
